@@ -1,7 +1,5 @@
 ﻿using MauiAppTempoAgora.Models;
 using MauiAppTempoAgora.Services;
-using Metal;
-using System.Threading.Tasks;
 
 namespace MauiAppTempoAgora
 {
@@ -15,7 +13,7 @@ namespace MauiAppTempoAgora
         }
 
         
-        private async Task Button_Clicked(object sender, EventArgs e)
+        private async void Button_Clicked(object sender, EventArgs e)
         {
             try
             {

@@ -7,12 +7,13 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Entry x:Name="txt.cidade"/>
-            <Button Text="Buscar" Clicked="Button_Clicked"/>
-            <Label x:Name="lbl_res"/>
 
+            <!-- Corrigido: nome sem ponto -->
+            <Entry x:Name="txt_cidade" Placeholder="Digite o nome da cidade" />
 
+            <Button Text="Buscar" Clicked="Button_Clicked" />
 
+            <Label x:Name="lbl_res" />
 
         </VerticalStackLayout>
     </ScrollView>

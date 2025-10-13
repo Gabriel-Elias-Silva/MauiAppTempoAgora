@@ -1,58 +1,56 @@
 ﻿using MauiAppTempoAgora.Models;
 using MauiAppTempoAgora.Services;
+using System.Net;
 
 namespace MauiAppTempoAgora
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        
         private async void Button_Clicked(object sender, EventArgs e)
         {
             try
             {
-if (!string.IsNullOrEmpty(txt_cidade.Text))
+                if (!string.IsNullOrWhiteSpace(txt_cidade.Text))
                 {
                     Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
+
                     if (t != null)
                     {
-                        string dados_previsao = "";
-                        dados_previsao = $"Latitude:{t.lat}\n" +
-                            $"Longitude:{t.lon}\n" +
-                            $"Nascer do Sol{t.sunrise}\n:" +
-                            $"Por do Sol:{t.sunset}\n" +
-                            $"Temp máx:{t.temp_max}\n" +
-                            $"Temp min:{t.temp_min}\n";
-
+                        string dados_previsao = $"Latitude: {t.lat}\n" +
+                                                $"Longitude: {t.lon}\n" +
+                                                $"Nascer do Sol: {t.sunrise}\n" +
+                                                $"Pôr do Sol: {t.sunset}\n" +
+                                                $"Temp Máx: {t.temp_max}°C\n" +
+                                                $"Temp Mín: {t.temp_min}°C\n" +
+                                                $"Clima: {t.description}\n" +
+                                                $"Vento: {t.speed} m/s\n" +
+                                                $"Visibilidade: {t.visibility} metros";
 
                         lbl_res.Text = dados_previsao;
-
                     }
                     else
                     {
-                        lbl_res.Text = "Sem dados de previsão";
-                            
+                        await DisplayAlert("Cidade não encontrada", "Não foi possível localizar a cidade informada.", "OK");
                     }
-
                 }
                 else
                 {
-                    lbl_res.Text = "Preencha a cidade.";
+                    await DisplayAlert("Campo vazio", "Por favor, digite o nome de uma cidade.", "OK");
                 }
+            }
+            catch (HttpRequestException)
+            {
+                await DisplayAlert("Erro de conexão", "Verifique sua internet e tente novamente.", "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Ops", ex.Message, "OK");
-
-
+                await DisplayAlert("Erro inesperado", ex.Message, "OK");
             }
         }
     }
-
 }

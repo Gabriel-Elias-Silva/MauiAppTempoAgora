@@ -8,7 +8,7 @@
             Padding="30,0"
             Spacing="25">
 
-            <!-- Corrigido: nome sem ponto -->
+            
             <Entry x:Name="txt_cidade" Placeholder="Digite o nome da cidade" />
 
             <Button Text="Buscar" Clicked="Button_Clicked" />

@@ -1,5 +1,7 @@
 ﻿using MauiAppTempoAgora.Models;
 using Newtonsoft.Json.Linq;
+using System.Net;
+
 namespace MauiAppTempoAgora.Services
 {
     public class DataService
@@ -8,42 +10,55 @@ namespace MauiAppTempoAgora.Services
         {
             Tempo? t = null;
             string chave = "6135072afe7f6cec1537d5cb08a5a1a2";
-            string url = $" https://api.openweathermap.org/data/2.5/weather?" +
-                $"q={cidade}&units=metric&appid={chave}";
-            using (HttpClient client = new HttpClient())
+            string url = $"https://api.openweathermap.org/data/2.5/weather?" +
+                         $"q={cidade}&units=metric&appid={chave}";
+
+            try
             {
-HttpResponseMessage resp = await client.GetAsync(url);
-                if (resp.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
+                    HttpResponseMessage resp = await client.GetAsync(url);
+
+                    if (resp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        
+                        return null;
+                    }
+
+                    resp.EnsureSuccessStatusCode(); 
+
                     string json = await resp.Content.ReadAsStringAsync();
                     var rascunho = JObject.Parse(json);
+
                     DateTime time = new();
                     DateTime sunrise = time.AddSeconds((double)rascunho["sys"]["sunrise"]).ToLocalTime();
                     DateTime sunset = time.AddSeconds((double)rascunho["sys"]["sunset"]).ToLocalTime();
 
-
-
-                    t = new()
+                    t = new Tempo
                     {
-                        lat = (double)rascunho["coord"]["lat"] ,
-                        lon = (double)rascunho["coord"]["lat"],
+                        lat = (double)rascunho["coord"]["lat"],
+                        lon = (double)rascunho["coord"]["lon"],
                         description = (string)rascunho["weather"][0]["description"],
                         main = (string)rascunho["weather"][0]["main"],
                         temp_max = (double)rascunho["main"]["temp_max"],
                         temp_min = (double)rascunho["main"]["temp_min"],
                         speed = (double)rascunho["wind"]["speed"],
                         visibility = (int)rascunho["visibility"],
-                        sunrise =sunrise.ToString(),
-                        sunset = sunset.ToString(),
-
-                    };//Fecha obj do tempo. 
-
-
-                }//Fecha if se o status do servidor foi de sucesso.
-            }//Fecha laço using.
-
-
-
+                        sunrise = sunrise.ToString(),
+                        sunset = sunset.ToString()
+                    };
+                }
+            }
+            catch (HttpRequestException)
+            {
+                
+                throw new HttpRequestException("Erro de conexão");
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
 
             return t;
         }

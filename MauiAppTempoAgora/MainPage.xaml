@@ -8,7 +8,8 @@
             Padding="30,0"
             Spacing="25">
             <Button Text="Minha Localização" Clicked="Button_Clicked_Localização"/>
-
+            <Label x:Name="lbl_coords"/>
+            
             <Entry x:Name="txt_cidade" Placeholder="Digite o nome da cidade" />
 
             <Button Text="Buscar Previsão" Clicked="Button_Clicked_Previsão" />

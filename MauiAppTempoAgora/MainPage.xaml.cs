@@ -1,6 +1,5 @@
 ﻿using MauiAppTempoAgora.Models;
 using MauiAppTempoAgora.Services;
-using System.Net;
 
 namespace MauiAppTempoAgora
 {
@@ -11,7 +10,7 @@ namespace MauiAppTempoAgora
             InitializeComponent();
         }
 
-        private async void Button_Clicked(object sender, EventArgs e)
+        private async void Button_Clicked_Previsão(object sender, EventArgs e)
         {
             try
             {
@@ -53,8 +52,43 @@ namespace MauiAppTempoAgora
             }
         }
 
-        private void Button_Clicked_1(object sender, EventArgs e)
+        private async void Button_Clicked_Localização(object sender, EventArgs e)
         {
+            try
+            {
+GeolocationRequest geolocationRequest = new GeolocationRequest
+                    (GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                Location? local = await Geolocation.Default.GetLocationAsync(geolocationRequest);
+                if (local != null) { 
+                string local_disp = $"Latitude: {local.Latitude} \n"
+                        + $"Longitude {local.Longitude}";
+                    lbl_coords.text = local_disp;
+                
+                
+                }
+            
+            }
+
+             catch (FeatureNotSupportedException fnex)
+            {
+                await DisplayAlert("Erro: Dispositivo não suporta", fnex.Message, "OK");
+            }
+            catch (FeatureNotEnabledException fnex)
+            {
+                await DisplayAlert("Erro: Localização Desabilitada", fnex.Message, "OK");
+
+            }
+            catch (PermissionException pex)
+            {
+                await DisplayAlert("Erro: Permissão da Localização", pex.Message, "OK");
+
+
+            }
+            catch (Exception ex) {
+                await DisplayAlert("Erro", ex.Message, "OK");
+
+            }
+
 
         }
     }

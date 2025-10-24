@@ -52,5 +52,10 @@ namespace MauiAppTempoAgora
                 await DisplayAlert("Erro inesperado", ex.Message, "OK");
             }
         }
+
+        private void Button_Clicked_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

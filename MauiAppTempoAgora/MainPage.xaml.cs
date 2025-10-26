@@ -64,6 +64,10 @@ namespace MauiAppTempoAgora
                     string local_disp = $"Latitude: {local.Latitude} \n"
                             + $"Longitude {local.Longitude}";
                     lbl_coords.Text = local_disp;
+                    //pega nome da cidade que está nas coordenadas.
+                    GetCidade(local.Latitude, local.Longitude);
+
+
                 }
                 else
                 {
@@ -95,15 +99,22 @@ namespace MauiAppTempoAgora
         }
 private async void GetCidade(double lat, double lon)
         {
-        IEnumerable<Placemark> places = await    Geocoding.Default.GetPlacemarksAsync(lat, lon);
-            Placemark? place = places.FirstOrDefault();
-            if (place != null)
+            try
             {
-                txt_cidade.Text = place.Locality; 
 
+                IEnumerable<Placemark> places = await Geocoding.Default.GetPlacemarksAsync(lat, lon);
+                Placemark? place = places.FirstOrDefault();
+                if (place != null)
+                {
+                    txt_cidade.Text = place.Locality;
+
+
+                }
+            }catch (Exception ex)
+            {
+                await DisplayAlert("Erro: obtenção do nome da cidade", ex.Message, "OK");
 
             }
-
         } 
     } 
     } 

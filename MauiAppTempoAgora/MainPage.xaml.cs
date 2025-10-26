@@ -56,20 +56,23 @@ namespace MauiAppTempoAgora
         {
             try
             {
-GeolocationRequest geolocationRequest = new GeolocationRequest
-                    (GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                GeolocationRequest geolocationRequest = new GeolocationRequest
+                                    (GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
                 Location? local = await Geolocation.Default.GetLocationAsync(geolocationRequest);
-                if (local != null) { 
-                string local_disp = $"Latitude: {local.Latitude} \n"
-                        + $"Longitude {local.Longitude}";
-                    lbl_coords.text = local_disp;
-                
-                
+                if (local != null)
+                {
+                    string local_disp = $"Latitude: {local.Latitude} \n"
+                            + $"Longitude {local.Longitude}";
+                    lbl_coords.Text = local_disp;
                 }
-            
+                else
+                {
+                    lbl_coords.Text = "Nenhuma Localização";
+                }
+
             }
 
-             catch (FeatureNotSupportedException fnex)
+            catch (FeatureNotSupportedException fnex)
             {
                 await DisplayAlert("Erro: Dispositivo não suporta", fnex.Message, "OK");
             }
@@ -84,12 +87,23 @@ GeolocationRequest geolocationRequest = new GeolocationRequest
 
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 await DisplayAlert("Erro", ex.Message, "OK");
 
             }
-
-
         }
-    }
-}
+private async void GetCidade(double lat, double lon)
+        {
+        IEnumerable<Placemark> places = await    Geocoding.Default.GetPlacemarksAsync(lat, lon);
+            Placemark? place = places.FirstOrDefault();
+            if (place != null)
+            {
+                txt_cidade.Text = place.Locality; 
+
+
+            }
+
+        } 
+    } 
+    } 
